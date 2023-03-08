@@ -1,0 +1,6 @@
+Function/__pycache__/platform_function.cpython-38.pyc
+Function/__pycache__/rsa.cpython-38.pyc
+qa*.txt
+Function/__pycache__/*
+*.csv
+*_*_ws_*.txt

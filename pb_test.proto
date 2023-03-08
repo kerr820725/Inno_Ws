@@ -1,0 +1,173 @@
+syntax = "proto3";
+import "google/protobuf/any.proto";
+
+enum Command {
+    COMMAND_NONE = 0;
+    SEND_MESSAGE = 2;
+    FETCH_MESSAGES = 3;
+    REPORT_ABUSE = 4;
+    SWITCH_LANGUAGE = 5;
+    USER_GROUP = 6;
+    SEND_TEXTING_MESSAGE = 7;
+    FETCH_TEXTING_MESSAGES = 8;
+    SUBSCRIBE_CHAT = 9;
+    UNSUBSCRIBE_CHAT = 10;
+    PUSH_MESSAGE = 100;
+    PUSH_TEXTING_MESSAGE = 101;
+    READ_TEXTING_MESSAGE = 102;
+    FETCH_READ_POINTERS = 103;
+    USER_STATUS = 200;
+    GROUP_STATUS = 201;
+    GROUP_INFO = 202;
+}
+
+enum Language {
+    DEFAULT = 0;
+    ZH_CN = 1;
+    EN_US = 2;
+    ZH_HK = 3;
+    ID_ID = 4;
+    MS_MY = 5;
+}
+
+message Request {
+    string reqID = 1;
+    Command command = 2;
+    google.protobuf.Any data = 3;
+}
+
+message Push {
+    string reqID = 1;
+    Command command = 2;
+    int32 code = 3;
+    string msg = 4;
+    google.protobuf.Any data = 5;
+}
+
+message ChatIDsWrapper {
+    repeated int64 chatIDs = 1;
+}
+
+message MessageEntityWrapper {
+    repeated MessageEntity messageEntity = 1;
+}
+
+message MessageEntity {
+    enum ContentType {
+        CONTENT_TYPE_NONE = 0;
+        CHAT = 1;
+        ORDER = 2;
+    }
+
+    enum Visible {
+        VISIBLE_NONE = 0;
+        ALL = 1;
+        SENDER = 2;
+    }
+
+    int64 msgID = 1;
+    ContentType contentType = 2;
+    int64 vdID = 3;
+    int64 sender = 4;
+    string senderName = 5;
+    int64 chatID = 6;
+    int32 vip = 7;
+    int32 avatar = 8;
+    int64 replyTo = 9;
+    string content = 10;
+    Visible visible = 11;
+    int64 timestamp = 12;
+}
+
+message FetchArgs {
+    int64 pointer = 1;
+    int64 chatID = 2;
+}
+
+message ReportAbuseArgs {
+    int64 userID = 1;
+    string reason = 2;
+}
+
+message Notify {
+    Command command = 1;
+    google.protobuf.Any data = 2;
+}
+
+message UserStatus {
+    string name = 1;
+    int64 vdID = 2;
+    int32 status = 3;
+}
+
+message SwitchLanguageArg {
+    string language = 1;
+}
+
+message Group {
+    int64 id = 1;
+    string name = 2;
+    string iconUrl = 3;
+    int32 memberCount = 4;
+    int32 deleted = 5;
+}
+
+message GroupsWrapper {
+    repeated Group groups = 1;
+}
+
+message UserGroupStateArg {
+    enum StateType {
+        STATE_TYPE_NONE = 0;
+        REGISTRATION = 1;
+        CANCELLATION = 2;
+    }
+
+    int64 userID = 2;
+    int64 groupID = 3;
+    StateType Status = 4;
+}
+
+
+message TextingMessage {
+    enum ContentType {
+        CONTENT_TYPE_NONE = 0;
+        PLAIN_TEXT = 1;
+        FILE = 2;
+    }
+
+    int64 msgID = 1;
+    ContentType contentType = 2;
+    int64 vdID = 3;
+    int64 sender = 4;
+    string senderName = 5;
+    int64 groupID = 6;
+    int32 avatar = 7;
+    int64 replyTo = 8;
+    string content = 9;
+    int64 timestamp = 10;
+}
+
+message TextingMessageWrapper {
+    repeated TextingMessage msgs = 1;
+}
+
+message FetchTextingMessageArg{
+    int64 pointer = 1;
+    int64 groupID = 2;
+}
+
+message ReadTextingMessageArg {
+    int64 pointer = 1;
+    int64 groupID = 2;
+    int64 userID = 3;
+}
+
+message ReadPointer {
+    int64 groupID = 1;
+    int64 pointer = 2;
+}
+
+message ReadPointerWrapper {
+    repeated ReadPointer pointers = 1;
+}
